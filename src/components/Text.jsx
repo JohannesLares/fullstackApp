@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text as NativeText, StyleSheet, Platform } from 'react-native';
+import { Text as NativeText, StyleSheet } from 'react-native';
 
 import theme from '../styles/theme';
 
@@ -8,11 +8,7 @@ const styles = StyleSheet.create({
     color: theme.colors.textPrimary,
     fontSize: theme.fontSizes.body,
     fontWeight: theme.fontWeights.normal,
-    fontFamily: Platform.select({
-      android: 'Roboto',
-      ios: 'Arial',
-      default: 'System'
-    }),
+    fontFamily: theme.fonts.main,
   },
   colorTextSecondary: {
     color: theme.colors.textSecondary,
