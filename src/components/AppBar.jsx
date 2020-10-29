@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { Link } from 'react-router-native';
 import Constants from 'expo-constants';
 import Text from './Text';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
+import { AUTHORIZED } from '../graphql/queries';
+import AuthStorageContext from '../contexts/AuthStorageContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +22,26 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+
+  const [signbutton, setSignbutton] = useState(false);
+
+  const { data, refetch } = useQuery(AUTHORIZED); //eslint-disable-line
+  const authStorage = useContext(AuthStorageContext);
+  const apolloClient = useApolloClient();
+
+  const logout = async () => {
+    await authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
+
+  useEffect(() => {
+    if (data && data.authorizedUser && data.authorizedUser !== null) {
+      setSignbutton(true);
+    } else {
+      setSignbutton(false);
+    }
+  }, [data]);
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
@@ -27,11 +50,17 @@ const AppBar = () => {
             <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Repositories</Text>
           </Link>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback>
-          <Link to="/signin">
-            <Text fontSize="subheading" fontWeight="bold" >SignIn</Text>
-          </Link>
-        </TouchableWithoutFeedback>
+        {!signbutton ?
+          <TouchableWithoutFeedback>
+            <Link to="/signin">
+              <Text fontSize="subheading" fontWeight="bold" >Sign In</Text>
+            </Link>
+          </TouchableWithoutFeedback>
+          :
+          <TouchableWithoutFeedback onPress={logout}>
+              <Text fontSize="subheading" fontWeight="bold" >Sign Out</Text>
+          </TouchableWithoutFeedback>
+        }
       </ScrollView>
     </View>
   );
