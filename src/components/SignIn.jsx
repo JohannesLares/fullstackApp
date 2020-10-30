@@ -37,11 +37,30 @@ const validationSchema = yup.object().shape({
 const SignInForm = ({onSubmit}) => {
   return (
     <View>
-      <FormikTextInput name="username" placeholder="Username" style={styles.textInput} />
-      <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} style={styles.textInput} />
-      <TouchableWithoutFeedback onPress={onSubmit}>
+      <FormikTextInput name="username" placeholder="Username" style={styles.textInput} testID="usernameField" />
+      <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} style={styles.textInput} testID="passwordField" />
+      <TouchableWithoutFeedback onPress={onSubmit} testID="submitButton" >
         <Text style={styles.loginButton}>Sign In</Text>
       </TouchableWithoutFeedback>
+    </View>
+  );
+};
+
+export const FormikForm = ({onSubmit}) => {
+  const initialValues = {
+    username: '',
+    password: ''
+  };
+
+  return(
+    <View>
+      <Formik 
+        initialValues={initialValues} 
+        onSubmit={onSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+      </Formik>
     </View>
   );
 };
@@ -63,22 +82,7 @@ const SignIn = () => {
     }
   };
 
-  const initialValues = {
-    username: '',
-    password: ''
-  };
-
-  return(
-    <View>
-      <Formik 
-        initialValues={initialValues} 
-        onSubmit={onSubmit}
-        validationSchema={validationSchema}
-      >
-        {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
-      </Formik>
-    </View>
-  );
+  return <FormikForm onSubmit={onSubmit} />;
 };
 
 export default SignIn;

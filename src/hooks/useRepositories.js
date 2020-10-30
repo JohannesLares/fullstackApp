@@ -5,9 +5,11 @@ import { GET_REPOSITORIES } from '../graphql/queries';
 
 const useRepositories = () => {
   const [repositories, setRepositories] = useState();
+  const [args, setArgs] = useState({});
 
   const { data, error, loading, refetch } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    variables: {...args}
   });
 
   useMemo(() => {
@@ -21,7 +23,7 @@ const useRepositories = () => {
     console.log(error);
   }, [error]);
 
-  return { repositories, loading, refetch: refetch };
+  return { repositories, loading, refetch: refetch, setArgs: setArgs, args };
 };
 
 export default useRepositories;

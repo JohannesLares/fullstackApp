@@ -25,7 +25,9 @@ const AppBar = () => {
 
   const [signbutton, setSignbutton] = useState(false);
 
-  const { data, refetch } = useQuery(AUTHORIZED); //eslint-disable-line
+  const { data, refetch } = useQuery(AUTHORIZED, {
+    fetchPolicy: 'cache-and-network'
+  }); //eslint-disable-line
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
 
@@ -50,15 +52,36 @@ const AppBar = () => {
             <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Repositories</Text>
           </Link>
         </TouchableWithoutFeedback>
+        {signbutton && 
+          <TouchableWithoutFeedback>
+            <Link to="/review">
+              <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Create a review</Text>
+            </Link>
+          </TouchableWithoutFeedback>          
+        }
+        {signbutton && 
+          <TouchableWithoutFeedback>
+            <Link to="/myreviews">
+              <Text fontSize="subheading" fontWeight="bold" style={styles.text} >My reviews</Text>
+            </Link>
+          </TouchableWithoutFeedback>          
+        }
         {!signbutton ?
           <TouchableWithoutFeedback>
             <Link to="/signin">
-              <Text fontSize="subheading" fontWeight="bold" >Sign In</Text>
+              <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Sign In</Text>
             </Link>
           </TouchableWithoutFeedback>
           :
-          <TouchableWithoutFeedback onPress={logout}>
-              <Text fontSize="subheading" fontWeight="bold" >Sign Out</Text>
+            <TouchableWithoutFeedback onPress={logout}>
+                <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Sign Out</Text>
+            </TouchableWithoutFeedback>
+        }
+        {!signbutton &&
+          <TouchableWithoutFeedback>
+            <Link to="/signup">
+              <Text fontSize="subheading" fontWeight="bold" style={styles.text} >Sign Up</Text>
+            </Link>
           </TouchableWithoutFeedback>
         }
       </ScrollView>

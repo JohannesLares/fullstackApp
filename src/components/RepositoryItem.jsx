@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import Text from './Text';
+import * as Linking from 'expo-linking';;
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -38,10 +39,18 @@ const styles = StyleSheet.create({
       marginTop: 10,
       color: "white",
       borderRadius: 5
+    },
+    button: {
+      margin: 10,
+      backgroundColor: "#e64ed1",
+      padding: 12,
+      borderRadius: 5,
+      color: "white",
+      textAlign: "center"
     }
 });
 
-const RepositoryItem = ({ id, fullName, description, language, forksCount, stargazersCount, ratingAverage, reviewCount, ownerAvatarUrl }) => {
+const RepositoryItem = ({ id, fullName, description, language, forksCount, stargazersCount, ratingAverage, reviewCount, ownerAvatarUrl, url }) => {
 
   const stripZeros = (item) => {
     if (item > 1000) {
@@ -52,6 +61,10 @@ const RepositoryItem = ({ id, fullName, description, language, forksCount, starg
     return item;
   };
 
+  const openUrl = (url) => {
+    Linking.openURL(url);
+  };
+
   return(
     <View key={id} style={styles.wrapper}>
       <View style={styles.largeContainer} >
@@ -60,29 +73,36 @@ const RepositoryItem = ({ id, fullName, description, language, forksCount, starg
         }}
         style={styles.image} />
         <View style={styles.container} >
-          <Text fontWeight="bold" fontSize="subheading" >{fullName}</Text>
-          <Text color="textSecondary" >{description}</Text>
-          <Text style={styles.language} >{language}</Text>
+          <Text fontWeight="bold" fontSize="subheading" testID="fullName" >{fullName}</Text>
+          <Text color="textSecondary" testID="description" >{description}</Text>
+          <Text style={styles.language} testID="language" >{language}</Text>
         </View>
       </View>
       <View style={styles.detailContainer}>
         <View style={styles.detail} >
-          <Text>{stripZeros(forksCount)}</Text>
+          <Text testID="forks" >{stripZeros(forksCount)}</Text>
           <Text color="textSecondary" >Forks</Text>
         </View>
         <View style={styles.detail} >
-          <Text>{stripZeros(stargazersCount)}</Text>
+          <Text testID="stargazers" >{stripZeros(stargazersCount)}</Text>
           <Text color="textSecondary" >Stars</Text>
         </View>
         <View style={styles.detail} >
-          <Text>{stripZeros(ratingAverage)}</Text>
+          <Text testID="rating" >{stripZeros(ratingAverage)}</Text>
           <Text color="textSecondary" >Rating</Text>
         </View>
         <View style={styles.detail} >
-          <Text>{stripZeros(reviewCount)}</Text>
+          <Text testID="reviews" >{stripZeros(reviewCount)}</Text>
           <Text color="textSecondary" >Reviews</Text>
         </View>
       </View>
+      {url !== undefined &&
+        <View>
+          <TouchableWithoutFeedback onPress={() => openUrl(url)} testID="submitButton" >
+            <Text style={styles.button}>Open in GitHub</Text>
+          </TouchableWithoutFeedback>
+        </View>
+      }
     </View>
   );
 };
